@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=LPS
+comment1.params=a\ b
+comment1.target=java.lang.String\ longer(java.lang.String,\ java.lang.String)
+comment2.params=s
+comment2.target=java.lang.String\ lpsDP(java.lang.String)
+numComments=3

@@ -1,0 +1,5 @@
+#BlueJ class context
+comment0.target=ClosestPair
+comment1.params=vec
+comment1.target=double[]\ closestPair(double[])
+numComments=2

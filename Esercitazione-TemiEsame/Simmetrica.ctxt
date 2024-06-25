@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=Simmetrica
+comment1.params=matrix
+comment1.target=boolean\ isSymmetric(int[][])
+comment2.params=
+comment2.target=void\ test()
+numComments=3

@@ -1,0 +1,5 @@
+#BlueJ class context
+comment0.target=MostFrequentChar
+comment1.params=v
+comment1.target=char\ mostFrequentChar(char[])
+numComments=2

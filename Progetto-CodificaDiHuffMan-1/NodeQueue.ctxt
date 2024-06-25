@@ -1,0 +1,21 @@
+#BlueJ class context
+comment0.target=NodeQueue
+comment1.params=
+comment1.target=NodeQueue()
+comment2.params=initialCapacity
+comment2.target=NodeQueue(int)
+comment3.params=
+comment3.target=int\ size()
+comment4.params=
+comment4.target=Node\ peek()
+comment5.params=
+comment5.target=Node\ poll()
+comment6.params=node
+comment6.target=void\ add(Node)
+comment7.params=node\ index
+comment7.target=void\ insertNode(Node,\ int)
+comment8.params=index
+comment8.target=void\ removeNode(int)
+comment9.params=newCapacity
+comment9.target=void\ resize(int)
+numComments=10

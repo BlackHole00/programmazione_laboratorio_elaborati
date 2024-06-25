@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=BoardUtils
+comment1.params=n
+comment1.target=int\ numberOfSolutions(int)
+comment2.params=b
+comment2.target=int\ numberOfCompletions(Board)
+comment3.params=args
+comment3.target=void\ main(java.lang.String[])
+numComments=4
