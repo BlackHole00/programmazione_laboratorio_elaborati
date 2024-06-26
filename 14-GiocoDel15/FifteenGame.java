@@ -1,8 +1,8 @@
 // Esercizio 14: Gioco del 15
 
 // Francesco Viciguerra - 15/05/2024
-// 		(viciguerrafrancesco@gmail.com)
-// 		(166896@spes.uniud.it)
+//         (viciguerrafrancesco@gmail.com)
+//         (166896@spes.uniud.it)
 // In riferimento a: https://users.dimi.uniud.it/~claudio.mirolo/teaching/programmazione/laboratory/assignments_23_24/15-05-24.pdf
 // Teachpack: https://users.dimi.uniud.it/~claudio.mirolo/teaching/programmazione/laboratory/assignments_23_24/code/fifteen_puzzle/puzzleboard.jar
 

@@ -2,8 +2,8 @@
 comment0.target=Huffman
 comment1.params=src
 comment1.target=int[]\ charHistogram(java.lang.String)
-comment10.params=fileName
-comment10.target=void\ test(java.lang.String)
+comment10.params=file
+comment10.target=void\ generateAndCompressRandomText(java.lang.String)
 comment11.params=args
 comment11.target=void\ main(java.lang.String[])
 comment2.params=freq
