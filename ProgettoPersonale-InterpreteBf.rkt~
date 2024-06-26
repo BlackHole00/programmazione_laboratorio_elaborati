@@ -69,6 +69,8 @@
 ; parametri della funzione stessa):
 ;   - memory: la lista (specificato precedentemente come mem)
 ;   - mem-pointer: il puntatore (specificato precedentemente come i)
+;   - loop-counter: contenente il livello di "nesting" delle parentesi quadre,
+;                   utilizzata per simplificare la risoluzione dei salti
 ;   - code: il sorgente che viene attualmente eseguito, codificato come stringa
 ;   - instruction-idx: l'indice del carattere che si sta attualmente eseguendo
 ;
@@ -124,6 +126,7 @@
 (define apply+/-             ; val: integer
   (lambda (memory            ; memory: list of integer
            mem-pointer       ; mem-pointer: integer
+           loop-counter      ; loop-counter: integer
            code              ; code: string
            instruction-idx   ; instruction-idx: integer
            is-plus)          ; is-plus: bool, true se '+', false se '-'
@@ -131,6 +134,7 @@
           (mem-diff (if is-plus 1 -1)))
       (eval-helper (memory-modify memory mem-pointer mem-diff)
                    mem-pointer
+                   loop-counter
                    code
                    (next-instruction-idx instruction-idx)))))
 
@@ -138,6 +142,7 @@
 (define apply>/<             ; val: integer
   (lambda (memory            ; memory: list of integer
            mem-pointer       ; mem-pointer: integer
+           loop-counter      ; loop-counter: integer
            code              ; code: string
            instruction-idx   ; instruction-idx: integer
            is-next)          ; is-next: bool, true se '>', false se '<'
@@ -145,6 +150,7 @@
           (next-mem-pointer (remainder (+ mem-pointer (if is-next 1 -1) mem-size) mem-size)))
       (eval-helper memory
                    next-mem-pointer
+                   loop-counter
                    code
                    (next-instruction-idx instruction-idx)))))
 
@@ -152,6 +158,7 @@
 (define apply.               ; val: integer
   (lambda (memory            ; memory: list of integer
            mem-pointer       ; mem-pointer: integer
+           loop-counter      ; loop-counter: integer
            code              ; code: string
            instruction-idx)  ; instruction-idx: integer
     (let (
@@ -159,6 +166,7 @@
       (display (integer->char value))
       (eval-helper memory
                    mem-pointer
+                   loop-counter
                    code
                    (next-instruction-idx instruction-idx)))))
 
@@ -166,6 +174,7 @@
 (define apply-comma          ; val: integer
   (lambda (memory            ; memory: list of integer
            mem-pointer       ; mem-pointer: integer
+           loop-counter      ; loop-counter: integer
            code              ; code: string
            instruction-idx)  ; instruction-idx: integer
     (letrec (
@@ -175,6 +184,7 @@
                               0)))
         (eval-helper (memory-set memory mem-pointer input-value)
                      mem-pointer
+                     loop-counter
                      code
                      (next-instruction-idx instruction-idx)))))
   
@@ -197,6 +207,7 @@
 (define apply-open           ; val: integer
   (lambda (memory            ; memory: list of integer
            mem-pointer       ; mem-pointer: integer
+           loop-counter      ; loop-counter: integer
            code              ; code: string
            instruction-idx)  ; instruction-idx: integer
     (let (
@@ -205,6 +216,7 @@
                                 (next-instruction-idx instruction-idx))))
       (eval-helper memory
                    mem-pointer
+                   loop-counter
                    code
                    next-instruction))))
 
@@ -212,6 +224,7 @@
 (define apply-closed          ; val: integer
   (lambda (memory             ; memory: list of integer
            mem-pointer        ; mem-pointer: integer
+           loop-counter       ; loop-counter: integer
            code               ; code: string
            instruction-idx)   ; instruction-idx: integer
     (let (
@@ -220,6 +233,7 @@
                                 (next-instruction-idx instruction-idx))))
       (eval-helper memory
                    mem-pointer
+                   loop-counter
                    code
                    next-instruction))))
 
@@ -227,6 +241,7 @@
 (define eval-helper           ; val: integer
   (lambda (memory             ; memory: list of integer
            mem-pointer        ; mem-pointer: integer
+           loop-counter       ; loop-counter: integer
            code               ; code: string
            instruction-idx)   ; instruction-idx: integer
     (if (>= instruction-idx (string-length code))
@@ -234,21 +249,21 @@
         (let (
               (instruction (string-ref code instruction-idx)))
           (cond
-            ((char=? instruction #\+) (apply+/- memory mem-pointer code instruction-idx #true))
-            ((char=? instruction #\-) (apply+/- memory mem-pointer code instruction-idx #false))
-            ((char=? instruction #\>) (apply>/< memory mem-pointer code instruction-idx #true))
-            ((char=? instruction #\<) (apply>/< memory mem-pointer code instruction-idx #false))
-            ((char=? instruction #\[) (apply-open memory mem-pointer code instruction-idx))
-            ((char=? instruction #\]) (apply-closed memory mem-pointer code instruction-idx))
-            ((char=? instruction #\.) (apply. memory mem-pointer code instruction-idx))
-            ((char=? instruction #\,) (apply-comma memory mem-pointer code instruction-idx))
-            (else (eval-helper memory mem-pointer code (+ instruction-idx 1))))))))
+            ((char=? instruction #\+) (apply+/- memory mem-pointer loop-counter code instruction-idx #true))
+            ((char=? instruction #\-) (apply+/- memory mem-pointer loop-counter code instruction-idx #false))
+            ((char=? instruction #\>) (apply>/< memory mem-pointer loop-counter code instruction-idx #true))
+            ((char=? instruction #\<) (apply>/< memory mem-pointer loop-counter code instruction-idx #false))
+            ((char=? instruction #\[) (apply-open memory mem-pointer loop-counter code instruction-idx))
+            ((char=? instruction #\]) (apply-closed memory mem-pointer loop-counter code instruction-idx))
+            ((char=? instruction #\.) (apply. memory mem-pointer loop-counter code instruction-idx))
+            ((char=? instruction #\,) (apply-comma memory mem-pointer loop-counter code instruction-idx))
+            (else (eval-helper memory mem-pointer loop-counter code (+ instruction-idx 1))))))))
 
 ; Esegue una programma scritto in brainf**k. Ritorna il numbero contenuto nella
 ; cella puntata dal puntatore al momemto della terminazione dell'esecuzione
 (define eval                  ; val: integer (input ed output forniti nel/dal terminale) 
   (lambda (code)              ; code: string
-    (eval-helper (list-with-length mem-size 0) 0 code 0)
+    (eval-helper (list-with-length mem-size 0) 0 0 code 0)
     (newline)))
 
 (eval "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.
